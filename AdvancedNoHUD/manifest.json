@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
   "id": "AdvancedNoHUD",
   "name": "AdvancedNoHUD",
-  "author": "",
+  "author": "headassbtw",
   "version": "0.0.1",
   "description": "",
   "gameVersion": "1.13.2",

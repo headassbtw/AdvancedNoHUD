@@ -13,6 +13,7 @@ using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace AdvancedNoHUD.UI
 {
+	/*
 	//[HarmonyPatch("Awake")]
 	[HarmonyPatch(typeof(PlayerSettingsPanelController), "SetLayout")]
 	internal class StaticlightsToggle
@@ -109,10 +110,10 @@ namespace AdvancedNoHUD.UI
 				StaticlightsToggle.replaceToggle.isOn = true;
 				StaticlightsToggle.ToggleEffectState(true);
 			}
-		}*/
+		}
 }
 
-
+	*/
 
 	class MenuManager
     {
