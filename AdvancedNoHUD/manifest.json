@@ -3,11 +3,12 @@
   "id": "AdvancedNoHUD",
   "name": "AdvancedNoHUD",
   "author": "headassbtw",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "gameVersion": "1.13.2",
   "dependsOn": {
-    "BSIPA": "^4.0.5"
+    "BSIPA": "^4.0.5",
+    "BeatSaberMarkupLanguage":  "^1.4.5"
   },
   "features": []
 }

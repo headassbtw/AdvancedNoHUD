@@ -20,7 +20,8 @@ namespace AdvancedNoHUD.HarmonyPatches
 			HUDManager.findHUD();
 			HUDManager.FindHUDElements();
 			HUDManager.PutThings(CustomTypes.whereHUD.HMD);
-			HUDManager.FindLivCamera();
+			//HUDManager.FindLivCamera();
+			//HUDManager.HideInLiv();
 		}
 	}
 

@@ -41,41 +41,28 @@ namespace AdvancedNoHUD
 
 
         
-        static void BruteForceFindHUD()
-        {
-            bool found = false;
-            while (!found)
-            {
-                try
-                {
-                    HUD = GameObject.Find("BasicGameHUD");
 
-                    if (HUD.name == null)
-                        Task.Delay(50);
-                    if (HUD.name != null)
-                        found = true;
-                }
-                catch (NullReferenceException) {}
-                Plugin.Log.Notice("Found the HUD");
-            }
-        }
 
         public static void FindHUDElements()
         {
             if(HUD != null)
             {
-                Combo = HUD.transform.Find("LeftPanel").Find("ComboPanel").gameObject;
+                //i know this is jank but in case some idiot has counters+ installs and breaks shit
+                try { Combo = GameObject.Find("ComboPanel"); } catch {}
 
-                Score = HUD.transform.Find("LeftPanel").Find("ScoreCanvas").Find("ScoreText").gameObject;
-
-                Rank = HUD.transform.Find("LeftPanel").Find("ScoreCanvas").Find("ImmediateRankText").gameObject;
-                HUD.transform.Find("LeftPanel").Find("ScoreCanvas").Find("RelativeScoreText").gameObject.transform.SetParent(Rank.transform);
-
-                Multiplier = HUD.transform.Find("RightPanel").Find("MultiplierCanvas").gameObject;
-
-                Progress = HUD.transform.Find("RightPanel").Find("SongProgressCanvas").gameObject;
-
-                Health = HUD.transform.Find("EnergyPanel").gameObject;
+                try { Score = GameObject.Find("ScoreText"); } catch { }
+                
+                try {
+                    Rank = GameObject.Find("ImmediateRankText");
+                    GameObject.Find("RelativeScoreText").gameObject.transform.SetParent(Rank.transform);
+                } catch { }
+                
+                try { Multiplier = GameObject.Find("MultiplierCanvas"); } catch { }
+                
+                try { Progress = GameObject.Find("SongProgressCanvas"); } catch { }
+                
+                try { Health = GameObject.Find("EnergyPanel"); } catch { }
+                
             }
             else { findHUD(); }
         }
@@ -173,8 +160,11 @@ namespace AdvancedNoHUD
 
         public static void findHUD()
         {
-            System.Threading.Thread fuck = new System.Threading.Thread(async => BruteForceFindHUD());
-            fuck.Start();
+            HUD = GameObject.Find("BasicGameHUD");
+            if (HUD == null)
+                HUD = GameObject.Find("NarrowGameHUD");
+            if (HUD == null)
+                HUD = GameObject.Find("FlyingGameHUD");
         }
 
         
