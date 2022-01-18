@@ -17,11 +17,15 @@ namespace AdvancedNoHUD.HarmonyPatches
 #if DEBUG
 			Plugin.Log.Info("AudioTimeSyncController.StartSong()");
 #endif
-			HUDManager.findHUD();
-			HUDManager.FindHUDElements();
-			HUDManager.PutThings(CustomTypes.whereHUD.HMD);
-			//HUDManager.FindLivCamera();
-			//HUDManager.HideInLiv();
+			if (HUDManager.findHUD())
+			{
+				Plugin.Found = true;
+				HUDManager.FindHUDElements();
+				HUDManager.PutThings(CustomTypes.whereHUD.HMD);
+			}
+#if DEBUG
+			Plugin.Log.Info("Finished Setup");
+#endif
 		}
 	}
 
@@ -35,7 +39,8 @@ namespace AdvancedNoHUD.HarmonyPatches
 #if DEBUG
 			Plugin.Log.Info("AudioTimeSyncController.Pause()");
 #endif
-			HUDManager.PutThings(CustomTypes.whereHUD.Pause);
+			if(Plugin.Found)
+				HUDManager.PutThings(CustomTypes.whereHUD.Pause);
 		}
 
 		[HarmonyTargetMethods]
@@ -55,7 +60,8 @@ namespace AdvancedNoHUD.HarmonyPatches
 #if DEBUG
 			Plugin.Log.Info("AudioTimeSyncController.Resume()");
 #endif
-			HUDManager.PutThings(CustomTypes.whereHUD.HMD);
+			if(Plugin.Found)
+				HUDManager.PutThings(CustomTypes.whereHUD.HMD);
 		}
 
 		[HarmonyTargetMethods]

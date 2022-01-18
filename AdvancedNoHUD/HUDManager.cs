@@ -3,6 +3,7 @@ using HMUI;
 using IPA.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -37,41 +38,61 @@ namespace AdvancedNoHUD
         public static GameObject HUD;
 
 
-        
 
 
+        public static bool AssignObject(ref GameObject assign, string name)
+        {
+            try
+            {
+                assign = GameObject.Find(name);
+                Plugin.Log.Debug($"Found {name}");
+                return true;
+            }
+            catch(Exception e)
+            {
+                Plugin.Log.Critical($"{name} could not be found!)");
+                return false;
+            }
+        }
+
+        public static string GetMemberName<T>(Expression<Func<T>> memberExpression)
+        {
+            MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
+            return expressionBody.Member.Name;
+        }
         
+        public static void VerboseActive(ref GameObject objec, bool status, string name = "")
+        {
+            try
+            {
+                objec.SetActive(status);
+            }
+            catch (NullReferenceException)
+            {
+                
+                Plugin.Log.Critical($"NullReferenceException when setting status of {name}");
+            }
+        }
 
 
         public static void FindHUDElements()
         {
-            if(HUD != null)
-            {
-                //i know this is jank but in case some idiot has counters+ installs and breaks shit
-                try { Combo = GameObject.Find("ComboPanel"); } catch {}
-
-                try { Score = GameObject.Find("ScoreText"); } catch { }
-                
-                try {
-                    Rank = GameObject.Find("ImmediateRankText");
-                    GameObject.Find("RelativeScoreText").gameObject.transform.SetParent(Rank.transform);
-                } catch { }
-                
-                try { Multiplier = GameObject.Find("MultiplierCanvas"); } catch { }
-                
-                try { Progress = GameObject.Find("SongProgressCanvas"); } catch { }
-                
-                try { Health = GameObject.Find("EnergyPanel"); } catch { }
-                
+            if(HUD == null)
+                findHUD();
+            //i know this is jank but in case some idiot has counters+ installs and breaks shit
+            AssignObject(ref Combo, "ComboPanel");
+            AssignObject(ref Score, "ScoreText");
+            if (AssignObject(ref Rank, "ImmediateRankText"))
+                GameObject.Find("RelativeScoreText").gameObject.transform.SetParent(Rank.transform);
+            AssignObject(ref Multiplier, "MultiplierCanvas");
+            AssignObject(ref Progress, "SongProgressCanvas");
+            AssignObject(ref Health, "EnergyPanel");
             }
-            else { findHUD(); }
-        }
 
 
         public static void PutThings(whereHUD wh)
         {
             LocationPreset tempPreset = new LocationPreset();
-
             switch (wh)
             {
                 case whereHUD.HMD:
@@ -81,15 +102,14 @@ namespace AdvancedNoHUD
                     tempPreset = Configuration.PluginConfig.Instance.Pause;
                     break;
             }
-
             try
             {
-                Combo.SetActive(tempPreset.elements.combo);
-                Score.SetActive(tempPreset.elements.score);
-                Rank.SetActive(tempPreset.elements.rank);
-                Multiplier.SetActive(tempPreset.elements.multiplier);
-                Progress.SetActive(tempPreset.elements.progress);
-                Health.SetActive(tempPreset.elements.health);
+                VerboseActive(ref Combo, tempPreset.elements.combo, "Combo");
+                VerboseActive(ref Score, tempPreset.elements.score,"Score");
+                VerboseActive(ref Rank, tempPreset.elements.rank,"Rank");
+                VerboseActive(ref Multiplier, tempPreset.elements.multiplier,"Multiplier");
+                VerboseActive(ref Progress, tempPreset.elements.progress,"Progress");
+                VerboseActive(ref Health, tempPreset.elements.health,"Health");
             }
             catch (NullReferenceException)
             {
@@ -158,13 +178,21 @@ namespace AdvancedNoHUD
             }
         }
 
-        public static void findHUD()
+        /// <summary>
+        /// Finds the HUD
+        /// </summary>
+        /// <returns>true if found, false if not</returns>
+        public static bool findHUD()
         {
             HUD = GameObject.Find("BasicGameHUD");
             if (HUD == null)
                 HUD = GameObject.Find("NarrowGameHUD");
             if (HUD == null)
                 HUD = GameObject.Find("FlyingGameHUD");
+            if (HUD == null)
+                Plugin.Log.Notice("HUD was not found!");
+            Plugin.Log.Info($"HUD name is: \"{HUD.name}\"");
+            return HUD != null;
         }
 
         

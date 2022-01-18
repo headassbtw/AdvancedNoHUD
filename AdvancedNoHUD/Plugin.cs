@@ -25,6 +25,7 @@ namespace AdvancedNoHUD
         internal static Plugin Instance { get; private set; }
         internal static IPALogger Log { get; private set; }
         internal static Harmony harmony { get; private set; }
+        internal static bool Found { get; set; } = false;
 
         [Init]
         /// <summary>
